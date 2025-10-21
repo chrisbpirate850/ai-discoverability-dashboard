@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/check-all-sites",
+      "schedule": "*/15 * * * *"
+    }
+  ]
+}
