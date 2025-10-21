@@ -1,10 +1,17 @@
 # AI Discoverability Dashboard
 
-A Next.js 14 monitoring dashboard for tracking the AI discoverability status of your websites. This dashboard helps you monitor which of your sites are accessible to AI assistants like Claude, ChatGPT, and others.
+A Next.js 15 monitoring dashboard for tracking the AI discoverability status of your websites. This dashboard helps you monitor which of your sites are accessible to AI assistants like Claude, ChatGPT, and others.
+
+> 📋 **For full project context and detailed documentation**, see [PROJECT-CONTEXT.md](./PROJECT-CONTEXT.md)
+>
+> That file contains comprehensive information about architecture, monitored sites, how everything works, and tips for future development sessions.
 
 ## Features
 
-- **Real-time Status Monitoring**: Track the status of all your sites with color-coded indicators
+- **Real-time Status Monitoring**: Track the status of all your sites with color-coded indicators (🟢🟡🔴)
+- **Auto-Refresh**: Automatically checks all sites every 15 minutes with countdown timer
+- **Manual Checks**: "Check All Sites Now" button for on-demand updates
+- **Last Check Timestamps**: Shows when each site was last checked (e.g., "5m ago")
 - **Ecosystem Organization**: Sites grouped by hub-and-spoke architecture
 - **Individual Site Details**: Detailed pages for each site with historical data
 - **Automated Checks**: API endpoints to check site availability and AI readability
@@ -13,11 +20,12 @@ A Next.js 14 monitoring dashboard for tracking the AI discoverability status of 
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with App Router
+- **Framework**: Next.js 15.5.6 with App Router
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS
+- **Styling**: Tailwind CSS v4
 - **Database**: Supabase (optional, for historical tracking)
-- **Deployment**: Vercel or Netlify
+- **Deployment**: Netlify
+- **GitHub**: https://github.com/chrisbpirate850/ai-discoverability-dashboard
 
 ## Quick Start
 
@@ -52,7 +60,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
+Open [http://localhost:3003](http://localhost:3003) to see the dashboard.
 
 ## Supabase Setup (Optional)
 
