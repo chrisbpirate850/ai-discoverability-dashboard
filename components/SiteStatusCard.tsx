@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Site } from '@/lib/types';
-import { getStatusEmoji, getStatusLabel, formatDate } from '@/lib/utils';
+import { getStatusEmoji, getStatusLabel, formatRelativeTime } from '@/lib/utils';
 
 interface SiteStatusCardProps {
   site: Site;
@@ -49,7 +49,7 @@ export function SiteStatusCard({ site }: SiteStatusCardProps) {
 
           {site.last_check && (
             <p className="text-xs text-gray-400 mt-2">
-              Checked: {formatDate(site.last_check)}
+              {formatRelativeTime(site.last_check)}
             </p>
           )}
         </div>

@@ -11,7 +11,7 @@ export const SITES: Omit<Site, 'id' | 'last_check'>[] = [
     current_status: 'deploying',
     framework: 'Astro',
     ai_readable: false,
-    next_action: 'Fix DNS typo, verify'
+    next_action: 'DNS propagating'
   },
 
   // ART OF CITIZENSHIP
