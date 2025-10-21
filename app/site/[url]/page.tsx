@@ -12,7 +12,7 @@ export default function SiteDetailPage() {
   const url = decodeURIComponent(params.url as string);
 
   const [checking, setChecking] = useState(false);
-  const [history, setHistory] = useState<any>(null);
+  const [history, setHistory] = useState<{ checks: SiteCheck[], stats: { uptime_percentage: number, avg_response_time: number, total_checks: number } } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const site = SITES.find(s => s.url === url);
@@ -21,6 +21,7 @@ export default function SiteDetailPage() {
     if (site) {
       fetchHistory();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [site]);
 
   const fetchHistory = async () => {
@@ -65,7 +66,7 @@ export default function SiteDetailPage() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <h1 className="text-xl font-bold text-red-900 mb-2">Site Not Found</h1>
-            <p className="text-red-700">The site URL "{url}" was not found in the dashboard.</p>
+            <p className="text-red-700">The site URL &ldquo;{url}&rdquo; was not found in the dashboard.</p>
             <button
               onClick={() => router.push('/')}
               className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"

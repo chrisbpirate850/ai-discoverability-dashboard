@@ -1,7 +1,7 @@
 import { DashboardHeader } from '@/components/DashboardHeader';
 import { EcosystemSection } from '@/components/EcosystemSection';
 import { SITES } from '@/lib/sites-data';
-import { Site, Ecosystem } from '@/lib/types';
+import { Site } from '@/lib/types';
 
 export default function Home() {
   // Generate site IDs and organize by ecosystem

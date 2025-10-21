@@ -8,8 +8,6 @@ export async function POST(request: NextRequest) {
     // Netlify webhook payload structure
     const {
       id,
-      site_id,
-      build_id,
       state, // ready, building, error
       name,
       url,
