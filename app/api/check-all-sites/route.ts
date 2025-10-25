@@ -1,11 +1,18 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { SITES } from '@/lib/sites-data';
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const results = [];
   const startTime = Date.now();
 
   console.log(`[CHECK-ALL-SITES] Starting live check of ${SITES.length} sites...`);
+
+  // Get the actual host from the request headers
+  const host = request.headers.get('host') || 'localhost:3005';
+  const protocol = host.includes('localhost') ? 'http' : 'https';
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || `${protocol}://${host}`;
+
+  console.log(`[CHECK-ALL-SITES] Using base URL: ${baseUrl}`);
 
   for (let i = 0; i < SITES.length; i++) {
     const site = SITES[i];
@@ -15,7 +22,7 @@ export async function POST() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/check-site?url=${encodeURIComponent(site.url)}`,
+        `${baseUrl}/api/check-site?url=${encodeURIComponent(site.url)}`,
         { method: 'GET' }
       );
 
@@ -31,13 +38,15 @@ export async function POST() {
       });
     } catch (error) {
       const siteTime = Date.now() - siteStartTime;
-      console.log(`[CHECK ${i + 1}/${SITES.length}] ✗ ${site.name}: ERROR (${siteTime}ms)`);
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      console.log(`[CHECK ${i + 1}/${SITES.length}] ✗ ${site.name}: ERROR (${siteTime}ms) - ${errorMsg}`);
 
       results.push({
         name: site.name,
         url: site.url,
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        ai_readable: false,
+        error: errorMsg
       });
     }
   }
@@ -53,6 +62,6 @@ export async function POST() {
   });
 }
 
-export async function GET() {
-  return POST();
+export async function GET(request: NextRequest) {
+  return POST(request);
 }
