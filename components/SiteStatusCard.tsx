@@ -2,15 +2,29 @@
 
 import Link from 'next/link';
 import { Site } from '@/lib/types';
-import { getStatusEmoji, getStatusLabel, formatRelativeTime } from '@/lib/utils';
+import { formatRelativeTime } from '@/lib/utils';
 
 interface SiteStatusCardProps {
   site: Site;
 }
 
 export function SiteStatusCard({ site }: SiteStatusCardProps) {
-  const statusEmoji = getStatusEmoji(site.current_status);
-  const statusLabel = getStatusLabel(site.current_status);
+  // Determine the actual display status based on both current_status and ai_readable
+  const getDisplayStatus = () => {
+    if (site.current_status === 'live' && site.ai_readable) {
+      return { emoji: '🟢', label: 'Live & AI-Readable', color: 'bg-green-100 text-green-800' };
+    } else if (site.current_status === 'live' && !site.ai_readable) {
+      return { emoji: '🔴', label: 'Not AI-Readable', color: 'bg-red-100 text-red-800' };
+    } else if (site.current_status === 'building' || site.current_status === 'deploying') {
+      return { emoji: '🟡', label: site.current_status === 'building' ? 'Building' : 'Deploying', color: 'bg-yellow-100 text-yellow-800' };
+    } else if (site.current_status === 'not-built') {
+      return { emoji: '🔴', label: 'Not Built', color: 'bg-red-100 text-red-800' };
+    } else {
+      return { emoji: '🔴', label: 'Error', color: 'bg-red-100 text-red-800' };
+    }
+  };
+
+  const displayStatus = getDisplayStatus();
 
   // Calculate days until expiration
   const getDaysUntilExpiration = (expirationDate: string) => {
@@ -34,7 +48,7 @@ export function SiteStatusCard({ site }: SiteStatusCardProps) {
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">{statusEmoji}</span>
+            <span className="text-2xl">{displayStatus.emoji}</span>
             <div>
               <h3 className="font-semibold text-gray-900">{site.name}</h3>
               <p className="text-sm text-gray-500">{site.url.replace('https://', '')}</p>
@@ -123,20 +137,14 @@ export function SiteStatusCard({ site }: SiteStatusCardProps) {
         </div>
 
         <div className="text-right flex flex-col items-end gap-2">
-          {site.current_status === 'live' && (
+          {site.current_status === 'live' && site.ai_readable && (
             <span className="inline-block px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 font-semibold">
               🌐 DEPLOYED
             </span>
           )}
 
-          <span className={`inline-block px-2 py-1 text-xs rounded-full ${
-            site.current_status === 'live'
-              ? 'bg-green-100 text-green-800'
-              : site.current_status === 'building' || site.current_status === 'deploying'
-              ? 'bg-yellow-100 text-yellow-800'
-              : 'bg-red-100 text-red-800'
-          }`}>
-            {statusLabel}
+          <span className={`inline-block px-2 py-1 text-xs rounded-full ${displayStatus.color}`}>
+            {displayStatus.label}
           </span>
 
           {domainInfo?.registrar === 'Other' && site.current_status === 'live' && (
