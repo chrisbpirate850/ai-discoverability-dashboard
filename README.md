@@ -8,14 +8,35 @@ A Next.js 15 monitoring dashboard for tracking the AI discoverability status of 
 
 ## Features
 
-- **Real-time Status Monitoring**: Track the status of all your sites with color-coded indicators (🟢🟡🔴)
+### Real-time Monitoring
+- **Live HTTP Checks**: Real HTTP requests to all 23 sites on every check
 - **Auto-Refresh**: Automatically checks all sites every 15 minutes with countdown timer
 - **Manual Checks**: "Check All Sites Now" button for on-demand updates
+- **Initial Page Load Check**: Checks run immediately when dashboard loads
+- **Console Logging**: Real-time progress tracking in browser console (F12)
+- **Color-Coded Indicators**: Visual status with 🟢🟡🔴
+
+### SEO Analysis (NEW!)
+- **100-Point SEO Scoring**: Comprehensive SEO health analysis
+- **6 Key Factors**: Title tags, meta descriptions, viewport, Open Graph, Twitter Cards, structured data
+- **Visual Score Badges**: Green (80+), Yellow (60-79), Red (0-59)
+- **Icon Indicators**: Quick visual reference for each SEO element (📝📱🌐🐦📊)
+- **Live Analysis**: SEO checked on every site check
+
+### Domain Management (NEW!)
+- **23 Domain Portfolio**: Track all registered domains across 4 registrars
+- **Expiration Monitoring**: Alert system for domains expiring within 90 days
+- **Critical Alerts**: Red banners for domains expiring in <30 days
+- **Unknown Registrar Detection**: Alerts with investigation instructions
+- **Registrar Tracking**: WA/IONOS, SiteGround, Squarespace, Name.com
+- **Auto-Renew Status**: Track which domains auto-renew vs manual
+- **Privacy Status**: Monitor domain privacy protection
+
+### Dashboard Views
+- **Ecosystem Organization**: Sites grouped by hub-and-spoke architecture (4 ecosystems)
 - **Last Check Timestamps**: Shows when each site was last checked (e.g., "5m ago")
-- **Ecosystem Organization**: Sites grouped by hub-and-spoke architecture
 - **Individual Site Details**: Detailed pages for each site with historical data
-- **Automated Checks**: API endpoints to check site availability and AI readability
-- **Netlify Integration**: Webhook support for build notifications
+- **Statistics Summary**: Deployment status, domain status, SEO scores
 - **Historical Tracking**: View uptime percentages and response time trends (requires Supabase)
 
 ## Tech Stack
@@ -60,7 +81,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 npm run dev
 ```
 
-Open [http://localhost:3003](http://localhost:3003) to see the dashboard.
+Open [http://localhost:3004](http://localhost:3004) to see the dashboard (or whatever port Next.js assigns).
 
 ## Supabase Setup (Optional)
 

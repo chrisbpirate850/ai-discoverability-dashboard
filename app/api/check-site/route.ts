@@ -1,6 +1,82 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
+// SEO Analysis Function
+function analyzeSEO(html: string) {
+  const score = {
+    total: 0,
+    maxScore: 100,
+    checks: {
+      hasTitle: false,
+      hasMetaDescription: false,
+      hasViewport: false,
+      hasOpenGraph: false,
+      hasTwitterCard: false,
+      hasStructuredData: false,
+      titleLength: 0,
+      descriptionLength: 0
+    },
+    details: {} as Record<string, string>
+  };
+
+  // Title tag (15 points)
+  const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
+  if (titleMatch) {
+    score.checks.hasTitle = true;
+    score.checks.titleLength = titleMatch[1].length;
+    score.details.title = titleMatch[1];
+    if (titleMatch[1].length >= 30 && titleMatch[1].length <= 60) {
+      score.total += 15;
+    } else if (titleMatch[1].length > 0) {
+      score.total += 10;
+    }
+  }
+
+  // Meta description (20 points)
+  const descMatch = html.match(/<meta\s+name=["']description["']\s+content=["']([^"']+)["']/i);
+  if (descMatch) {
+    score.checks.hasMetaDescription = true;
+    score.checks.descriptionLength = descMatch[1].length;
+    score.details.description = descMatch[1];
+    if (descMatch[1].length >= 120 && descMatch[1].length <= 160) {
+      score.total += 20;
+    } else if (descMatch[1].length > 0) {
+      score.total += 15;
+    }
+  }
+
+  // Viewport meta tag (15 points)
+  if (html.includes('name="viewport"') || html.includes('name=\'viewport\'')) {
+    score.checks.hasViewport = true;
+    score.total += 15;
+  }
+
+  // Open Graph tags (20 points)
+  const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
+  const ogDescMatch = html.match(/<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i);
+  const ogImageMatch = html.match(/<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i);
+
+  if (ogTitleMatch && ogDescMatch) {
+    score.checks.hasOpenGraph = true;
+    score.total += ogImageMatch ? 20 : 15;
+    score.details.ogTitle = ogTitleMatch[1];
+  }
+
+  // Twitter Card (15 points)
+  if (html.includes('twitter:card')) {
+    score.checks.hasTwitterCard = true;
+    score.total += 15;
+  }
+
+  // Structured Data / JSON-LD (15 points)
+  if (html.includes('application/ld+json') || html.includes('itemscope')) {
+    score.checks.hasStructuredData = true;
+    score.total += 15;
+  }
+
+  return score;
+}
+
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const url = searchParams.get('url');
@@ -31,6 +107,9 @@ export async function GET(request: NextRequest) {
       !html.includes('id="__next"') ||
       (html.includes('id="__next"') && html.length > 50000);
 
+    // SEO Analysis
+    const seoScore = analyzeSEO(html);
+
     const result = {
       url,
       status: response.ok ? 'live' : 'error',
@@ -38,7 +117,8 @@ export async function GET(request: NextRequest) {
       response_time: responseTime,
       timestamp: new Date().toISOString(),
       ai_readable: hasContent && response.ok,
-      html_length: html.length
+      html_length: html.length,
+      seo: seoScore
     };
 
     // Store in Supabase if configured
