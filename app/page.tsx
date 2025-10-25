@@ -188,10 +188,10 @@ export default function Home() {
                 {checking ? 'Checking All Sites...' : 'Check All Sites Now'}
               </button>
               <div className="text-sm text-gray-600">
-                <div>
+                <div suppressHydrationWarning>
                   Last updated: {lastUpdate.toLocaleTimeString()}
                 </div>
-                <div>
+                <div suppressHydrationWarning>
                   Next auto-check in: <span className="font-mono font-semibold">{formatCountdown(nextCheck)}</span>
                 </div>
               </div>
